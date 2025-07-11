@@ -1,7 +1,8 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
     "title": "AduanasTec",
+    "description": "API REST de AduanasTec (Productos, Clientes, Ventas)",
     "version": "v1"
   },
   "paths": {
@@ -618,7 +619,7 @@
     "securitySchemes": {
       "Bearer": {
         "type": "http",
-        "description": "Introduce el token JWT como: Bearer {tu_token}",
+        "description": "Usa: Bearer {tu_token}",
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
