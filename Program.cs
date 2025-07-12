@@ -12,14 +12,30 @@ using AduanasTec.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1) Agregar servicios al contenedor
-builder.Services.AddControllers();
+// 1) Configurar CORS para tu frontend Vue (puerto 5173)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp", policy =>
+        policy
+          .WithOrigins("http://localhost:5173")  // URL de tu dev server de Vite
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials()
+    );
+});
+
+// 2) Agregar servicios al contenedor
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    });
 builder.Services.AddEndpointsApiExplorer();
 
-// 2) Configurar Swagger/OpenAPI
+// 3) Configurar Swagger/OpenAPI
 builder.Services.AddSwaggerGen(c =>
 {
-    // Documento "v1"
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "AduanasTec",
@@ -27,7 +43,6 @@ builder.Services.AddSwaggerGen(c =>
         Description = "API REST de AduanasTec (Productos, Clientes, Ventas)"
     });
 
-    // JWT en Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -52,26 +67,25 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // Aplica candado a los endpoints con [Authorize]
     c.OperationFilter<AuthorizationOperationFilter>();
 });
 
-// 3) Configurar EF Core + SQL Server
+// 4) Configurar EF Core + SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 4) Inyección de dependencias: Services
+// 5) Inyección de dependencias: Services
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// 5) Inyección de dependencias: Repositories
+// 6) Inyección de dependencias: Repositories
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 
-// 6) Autenticación JWT
+// 7) Autenticación JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -92,19 +106,19 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// 7) Middleware pipeline
+// 8) Middleware pipeline
 
-// **Siempre** exponer Swagger y su UI
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    // Swagger JSON
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "AduanasTec API v1");
-    // Si quieres servir la UI en la raíz en lugar de /swagger:
     // c.RoutePrefix = string.Empty;
 });
 
 app.UseHttpsRedirection();
+
+// ← Aquí va el CORS justo después de HTTPS y antes de autenticar
+app.UseCors("AllowVueApp");
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -114,8 +128,8 @@ app.MapControllers();
 // SEEDER: Crear usuario admin si no existe
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AduanasTec.Database.AppDbContext>();
-    AduanasTec.Database.DbSeeder.Seed(db);
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    DbSeeder.Seed(db);
 }
 
 app.Run();

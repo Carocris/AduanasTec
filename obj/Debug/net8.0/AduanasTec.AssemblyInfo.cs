@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AduanasTec")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c744f3f1071272f62ed0cd6a78a34d5b92967ae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc7b42dbfa9cc3d34c4a8dbb4b4b170b4001ec62")]
 [assembly: System.Reflection.AssemblyProductAttribute("AduanasTec")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AduanasTec")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -2,6 +2,8 @@
 using AduanasTec.Models;
 using AduanasTec.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
+using AduanasTec.DTOS;
 
 namespace AduanasTec.Controllers
 {
@@ -33,8 +35,26 @@ namespace AduanasTec.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Venta venta)
+        public async Task<IActionResult> Create([FromBody] CreateVentaDto ventaDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Crear la entidad Venta desde el DTO
+            var venta = new Venta
+            {
+                ClienteId = ventaDto.ClienteId,
+                Fecha = DateTime.Now,
+                VentaProductos = ventaDto.VentaProductos.Select(vp => new VentaProducto
+                {
+                    ProductoId = vp.ProductoId,
+                    Cantidad = vp.Cantidad
+                }).ToList(),
+                Total = ventaDto.Total
+            };
+
             var creada = await _ventaService.CreateAsync(venta);
             return CreatedAtAction(nameof(GetById), new { id = creada.Id }, creada);
         }
@@ -59,4 +79,8 @@ namespace AduanasTec.Controllers
             return NoContent();
         }
     }
+
+   
+
+    
 }

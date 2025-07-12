@@ -1,5 +1,7 @@
 C:\Users\HP\source\repos\AduanasTec\AduanasTec\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\HP\source\repos\AduanasTec\AduanasTec\bin\Debug\net8.0\appsettings.json
+C:\Users\HP\source\repos\AduanasTec\AduanasTec\bin\Debug\net8.0\package-lock.json
+C:\Users\HP\source\repos\AduanasTec\AduanasTec\bin\Debug\net8.0\package.json
 C:\Users\HP\source\repos\AduanasTec\AduanasTec\bin\Debug\net8.0\AduanasTec.staticwebassets.endpoints.json
 C:\Users\HP\source\repos\AduanasTec\AduanasTec\bin\Debug\net8.0\AduanasTec.exe
 C:\Users\HP\source\repos\AduanasTec\AduanasTec\bin\Debug\net8.0\AduanasTec.deps.json

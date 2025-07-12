@@ -361,17 +361,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Venta"
+                "$ref": "#/components/schemas/CreateVentaDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Venta"
+                "$ref": "#/components/schemas/CreateVentaDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Venta"
+                "$ref": "#/components/schemas/CreateVentaDto"
               }
             }
           }
@@ -512,6 +512,31 @@
         },
         "additionalProperties": false
       },
+      "CreateVentaDto": {
+        "required": [
+          "clienteId",
+          "total",
+          "ventaProductos"
+        ],
+        "type": "object",
+        "properties": {
+          "clienteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ventaProductos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VentaProductoDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -609,6 +634,26 @@
             "$ref": "#/components/schemas/Producto"
           },
           "cantidad": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VentaProductoDto": {
+        "required": [
+          "cantidad",
+          "productoId"
+        ],
+        "type": "object",
+        "properties": {
+          "productoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cantidad": {
+            "maximum": 9999,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           }
